@@ -1,6 +1,6 @@
-package ai.grayducks.grayducksservice.service
+package ai.grayducks.grayducksservice.domain
 
-data class UserProfile(val id: String?,
+data class UserProfile(val id: String,
                        val email: String?,
                        val name: String?,
                        val verified_email: Boolean?,
