@@ -1,7 +1,6 @@
 package ai.grayducks.grayducksservice.controller
 
 import ai.grayducks.grayducksservice.domain.EventResponse
-import ai.grayducks.grayducksservice.domain.UserProfile
 import ai.grayducks.grayducksservice.service.GoogleCalendarService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders

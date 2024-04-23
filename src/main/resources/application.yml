@@ -1,0 +1,37 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: id
+            client-secret: secret
+            scope:
+              - email
+              - profile
+              - openid
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+  datasource:
+    url: jdbc:postgresql://localhost/dev
+    username: user
+    password: pwd
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+hibernate:
+  show_sql: true
+  format_sql: true
+logging:
+  level:
+   org:
+    hibernate:
+     SQL: DEBUG
+     type: TRACE
+
+server:
+  port: 8081
+
