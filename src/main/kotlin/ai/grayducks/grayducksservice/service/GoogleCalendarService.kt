@@ -3,7 +3,7 @@ package ai.grayducks.grayducksservice.service
 import ai.grayducks.grayducksservice.config.Constants.Companion.GOOGLE_CALENDAR_EVENTS
 import ai.grayducks.grayducksservice.config.Constants.Companion.GOOGLE_USERINFO_URI
 import ai.grayducks.grayducksservice.domain.EventResponse
-import ai.grayducks.grayducksservice.domain.User
+import ai.grayducks.grayducksservice.domain.UserInfo
 import ai.grayducks.grayducksservice.repository.UserSettingsRepository
 import ai.grayducks.grayducksservice.repository.entities.UserSettingsEntity
 import ai.grayducks.grayducksservice.service.interfaces.HttpInterface
@@ -22,10 +22,10 @@ class GoogleCalendarService(
 
     private val log = KotlinLogging.logger {}
 
-    fun getUserProfile(token: String): User? {
+    fun getUserProfile(token: String): UserInfo? {
         val httpEntity = constructHeader(token);
         val profile =
-            restTemplate.exchange(GOOGLE_USERINFO_URI, HttpMethod.GET, httpEntity, User::class.java)
+            restTemplate.exchange(GOOGLE_USERINFO_URI, HttpMethod.GET, httpEntity, UserInfo::class.java)
 
         log.info("Saving profile information:" + profile.body!!.id);
 
@@ -44,7 +44,7 @@ class GoogleCalendarService(
         return events.body
     }
 
-    private fun updateUserVisitMetadata(profile: User) {
+    private fun updateUserVisitMetadata(profile: UserInfo) {
         try {
             userRepository.findByExternalUserId(profile.id);
         } catch (e: EmptyResultDataAccessException) {

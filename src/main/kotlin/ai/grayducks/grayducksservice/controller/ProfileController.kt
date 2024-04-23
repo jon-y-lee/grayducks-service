@@ -1,7 +1,7 @@
 package ai.grayducks.grayducksservice.controller
 
 import ai.grayducks.grayducksservice.domain.Profile
-import ai.grayducks.grayducksservice.domain.User
+import ai.grayducks.grayducksservice.domain.UserInfo
 import ai.grayducks.grayducksservice.domain.UserSettings
 import ai.grayducks.grayducksservice.service.GoogleCalendarService
 import ai.grayducks.grayducksservice.service.UserSettingsService
@@ -19,7 +19,7 @@ class ProfileController(
 ) {
 
     @GetMapping("/profile")
-    fun profile(@RequestHeader(HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<User> {
+    fun profile(@RequestHeader(HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<UserInfo> {
         return ResponseEntity.ok(googleCalendarService.getUserProfile(token));
     }
 

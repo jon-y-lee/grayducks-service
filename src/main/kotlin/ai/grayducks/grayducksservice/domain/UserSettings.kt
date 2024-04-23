@@ -12,8 +12,5 @@ data class UserSettings(
 data class Profile(val name: String, val color: String) {}
 
 fun Profile.mapToProfileEntity(): UserEntity {
-    var profileEntity = UserEntity()
-    profileEntity.name = name
-    profileEntity.color = color;
-    return profileEntity
+    return UserEntity(null, name, color, null)
 }

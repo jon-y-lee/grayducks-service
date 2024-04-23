@@ -1,13 +1,12 @@
 package ai.grayducks.grayducksservice.service
 
 import ai.grayducks.grayducksservice.domain.Profile
-import ai.grayducks.grayducksservice.domain.User
+import ai.grayducks.grayducksservice.domain.UserInfo
 import ai.grayducks.grayducksservice.domain.UserSettings
 import ai.grayducks.grayducksservice.domain.mapToProfileEntity
 import ai.grayducks.grayducksservice.repository.UserSettingsRepository
 import ai.grayducks.grayducksservice.repository.entities.UserEntity
 import ai.grayducks.grayducksservice.repository.entities.mapToUserSettings
-import ai.grayducks.grayducksservice.service.interfaces.HttpInterface
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -20,8 +19,8 @@ class UserSettingsService(
         return userSettingsRepository.findByExternalUserId(id)
     }
 
-    fun addSettingsProfile(userProfile: User?, profile: Profile): UserSettings? {
-        val userSetting = userSettingsRepository.findByExternalUserId(userProfile!!.id)
+    fun addSettingsProfile(userInfoProfile: UserInfo?, profile: Profile): UserSettings? {
+        val userSetting = userSettingsRepository.findByExternalUserId(userInfoProfile!!.id)
         val profileEntity: UserEntity = profile.mapToProfileEntity();
         profileEntity.usersettings = userSetting
 
