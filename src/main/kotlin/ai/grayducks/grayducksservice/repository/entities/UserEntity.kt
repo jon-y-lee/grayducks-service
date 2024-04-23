@@ -18,9 +18,6 @@ class UserEntity(
     @Column(nullable = true)
     var color: String,
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "usersettings_id")
-//    @JsonManagedReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     var usersettings: UserSettingsEntity? = null,

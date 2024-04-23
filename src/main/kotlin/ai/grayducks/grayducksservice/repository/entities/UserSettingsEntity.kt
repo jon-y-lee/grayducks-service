@@ -23,8 +23,6 @@ class UserSettingsEntity(
     @Column(nullable = false)
     var emailAddress: String,
 
-//    @OneToMany(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.LAZY, mappedBy = "usersettings")
-//    @JsonBackReference
     @OneToMany(cascade = arrayOf(CascadeType.ALL), fetch = FetchType.LAZY)
     @JsonManagedReference
     @JoinColumn(name = "profile_id")

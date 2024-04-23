@@ -1,5 +1,7 @@
 package ai.grayducks.grayducksservice.service
 
+import ai.grayducks.grayducksservice.config.Constants.Companion.GOOGLE_CALENDAR_EVENTS
+import ai.grayducks.grayducksservice.config.Constants.Companion.GOOGLE_USERINFO_URI
 import ai.grayducks.grayducksservice.domain.EventResponse
 import ai.grayducks.grayducksservice.domain.User
 import ai.grayducks.grayducksservice.repository.UserSettingsRepository
@@ -8,8 +10,6 @@ import ai.grayducks.grayducksservice.service.interfaces.HttpInterface
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
@@ -22,13 +22,11 @@ class GoogleCalendarService(
 
     private val log = KotlinLogging.logger {}
 
-    val profileUrl = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json"
-    val calendarEventsUrl = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
-
     fun getUserProfile(token: String): User? {
         val httpEntity = constructHeader(token);
         val profile =
-            restTemplate.exchange(profileUrl, HttpMethod.GET, httpEntity, User::class.java)
+            restTemplate.exchange(GOOGLE_USERINFO_URI, HttpMethod.GET, httpEntity, User::class.java)
+
         log.info("Saving profile information:" + profile.body!!.id);
 
         updateUserVisitMetadata(profile.body!!);
@@ -38,7 +36,7 @@ class GoogleCalendarService(
 
     fun getEvents(token: String, startDate: String, endDate: String): EventResponse? {
         val httpEntity = constructHeader(token);
-        val url = calendarEventsUrl + "?singleEvents=true&timeMin=" +
+        val url = GOOGLE_CALENDAR_EVENTS + "?singleEvents=true&timeMin=" +
                 startDate + "&timeMax=" + endDate
         val events =
             restTemplate.exchange(url, HttpMethod.GET, httpEntity, EventResponse::class.java)
