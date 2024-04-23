@@ -1,9 +1,9 @@
-package ai.grayducks.grayducksservice.service
+package ai.grayducks.grayducksservice.service.interfaces
 
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 
-interface HttpService {
+interface HttpInterface {
     
     fun constructHeader(token: String): HttpEntity<*>? {
         val headers = HttpHeaders();

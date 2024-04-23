@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface UserSettingsRepository : JpaRepository<UserSettingsEntity, Long> {
-
     @EntityGraph(attributePaths = ["profiles"])
     fun findByExternalUserId(id: String): UserSettingsEntity
 }

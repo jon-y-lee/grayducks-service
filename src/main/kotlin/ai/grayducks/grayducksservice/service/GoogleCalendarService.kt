@@ -4,6 +4,7 @@ import ai.grayducks.grayducksservice.domain.EventResponse
 import ai.grayducks.grayducksservice.domain.User
 import ai.grayducks.grayducksservice.repository.UserSettingsRepository
 import ai.grayducks.grayducksservice.repository.entities.UserSettingsEntity
+import ai.grayducks.grayducksservice.service.interfaces.HttpInterface
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
@@ -17,7 +18,7 @@ import org.springframework.web.client.RestTemplate
 class GoogleCalendarService(
     @Autowired val userRepository: UserSettingsRepository,
     @Autowired val restTemplate: RestTemplate
-) {
+) : HttpInterface {
 
     private val log = KotlinLogging.logger {}
 
@@ -43,12 +44,6 @@ class GoogleCalendarService(
             restTemplate.exchange(url, HttpMethod.GET, httpEntity, EventResponse::class.java)
 
         return events.body
-    }
-
-    private fun constructHeader(token: String): HttpEntity<String> {
-        val headers = HttpHeaders();
-        headers.setBearerAuth(token.removePrefix("Bearer "))
-        return HttpEntity("", headers);
     }
 
     private fun updateUserVisitMetadata(profile: User) {

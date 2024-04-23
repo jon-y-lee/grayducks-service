@@ -1,7 +1,7 @@
 package ai.grayducks.grayducksservice.service
 
-import ai.grayducks.grayducksservice.domain.EventResponse
 import ai.grayducks.grayducksservice.domain.TaskResponse
+import ai.grayducks.grayducksservice.service.interfaces.HttpInterface
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpMethod
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class GoogleTasksService(@Autowired val restTemplate: RestTemplate) : HttpService {
+class GoogleTasksInterface(@Autowired val restTemplate: RestTemplate) : HttpInterface {
 
     private val log = KotlinLogging.logger {}
 
