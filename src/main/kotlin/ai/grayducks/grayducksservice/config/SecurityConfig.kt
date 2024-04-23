@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
-
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(@Autowired private val restTemplate: RestTemplate) : WebMvcConfigurer {
@@ -24,8 +23,6 @@ class SecurityConfig(@Autowired private val restTemplate: RestTemplate) : WebMvc
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain? {
-        //        http.authorizeHttpRequests().anyRequest().permitAll()
-        //        return http.build()
         http.securityMatcher("/**").authorizeHttpRequests { rmr ->
             rmr
                 .requestMatchers("/**").permitAll()
@@ -34,6 +31,5 @@ class SecurityConfig(@Autowired private val restTemplate: RestTemplate) : WebMvc
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         }.csrf { obj: AbstractHttpConfigurer<*, *> -> obj.disable() }
         return http.build()
-
     }
 }

@@ -19,7 +19,6 @@ class TokenInterceptor(val restTemplate: RestTemplate) : HandlerInterceptor {
      */
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         log.info("Token Interceptor: Pre Handle")
-        System.out.println("TOKEN INTER")
         if (request.method.equals("OPTIONS")) return true;
 
         val token = request.getHeader("Authorization");
@@ -33,8 +32,6 @@ class TokenInterceptor(val restTemplate: RestTemplate) : HandlerInterceptor {
             TOKENINFO_URL + token.removePrefix("Bearer ");
         val verifierResponse: ResponseEntity<String> = restTemplate.getForEntity(urlPath, String::class.java)
         response.status = verifierResponse.statusCode.value()
-
-        log.info("response status: " + response.status)
 
         return response.status == HttpStatus.OK.value()
     }

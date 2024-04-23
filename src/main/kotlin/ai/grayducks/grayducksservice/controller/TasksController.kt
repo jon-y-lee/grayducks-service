@@ -19,7 +19,6 @@ class TasksController(@Autowired val googleTasksService: GoogleTasksService) {
 
     @GetMapping("/tasks")
     fun getTasks(@RequestHeader(HttpHeaders.AUTHORIZATION) token: String): ResponseEntity<TaskResponse> {
-
         return ResponseEntity.ok(googleTasksService.listTasks(token));
     }
 }

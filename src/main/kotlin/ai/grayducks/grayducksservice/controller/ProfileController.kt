@@ -34,7 +34,7 @@ class ProfileController(
     fun addSettingProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) token: String, @RequestBody profile: Profile): ResponseEntity<UserSettings> {
         // TODO: Get id from jwt token
         val userProfile = googleCalendarService.getUserProfile(token);
-        println("User Profilel: " + userProfile);
+
         return ResponseEntity.ok(userSettingsService.addSettingsProfile(userProfile, profile))
     }
 
