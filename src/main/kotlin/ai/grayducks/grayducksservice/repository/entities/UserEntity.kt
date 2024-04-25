@@ -26,5 +26,5 @@ class UserEntity(
 }
 
 fun UserEntity.mapToProfile(): Profile {
-    return Profile(name, color)
+    return Profile(id.toString(), name, color)
 }

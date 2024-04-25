@@ -19,16 +19,25 @@ class UserSettingsService(
         return userSettingsRepository.findByExternalUserId(id)
     }
 
-    fun addSettingsProfile(userInfoProfile: UserInfo?, profile: Profile): UserSettings? {
-        val userSetting = userSettingsRepository.findByExternalUserId(userInfoProfile!!.id)
+    fun addSettingsProfile(userProfile: UserInfo?, profile: Profile): UserSettings? {
+        val userSetting = userSettingsRepository.findByExternalUserId(userProfile!!.id)
         val profileEntity: UserEntity = profile.mapToProfileEntity();
         profileEntity.usersettings = userSetting
 
-        val profiles = mutableListOf<UserEntity>()
-        profiles.addAll(userSetting.profiles)
-        profiles.add(profileEntity)
+        val profiles =
+            userSetting.profiles.map { element -> element }.filter { element -> element.id.toString() != profile.id }.toMutableList()
 
+        profiles.add(profile.mapToProfileEntity());
         userSetting.profiles = profiles
         return userSettingsRepository.save(userSetting).mapToUserSettings();
+    }
+
+    fun deleteSettingsProfile(userProfile: UserInfo?, id: String): UserSettings? {
+        val userSetting = userSettingsRepository.findByExternalUserId(userProfile!!.id)
+        var profiles =
+            userSetting.profiles.map { profile -> profile }.filter { profile -> profile.id.toString() != id };
+        userSetting.profiles = profiles;
+        return userSettingsRepository.save(userSetting).mapToUserSettings()
+
     }
 }

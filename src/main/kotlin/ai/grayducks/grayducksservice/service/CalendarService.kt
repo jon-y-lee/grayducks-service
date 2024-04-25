@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
 @Service
-class GoogleCalendarService(
+class CalendarService(
     @Autowired val userRepository: UserSettingsRepository,
     @Autowired val restTemplate: RestTemplate
 ) : HttpInterface {
@@ -23,7 +23,7 @@ class GoogleCalendarService(
     private val log = KotlinLogging.logger {}
 
     fun getUserProfile(token: String): UserInfo? {
-        val httpEntity = constructHeader(token);
+        val httpEntity = constructHeader(token, null);
         val profile =
             restTemplate.exchange(GOOGLE_USERINFO_URI, HttpMethod.GET, httpEntity, UserInfo::class.java)
 
@@ -35,7 +35,7 @@ class GoogleCalendarService(
     }
 
     fun getEvents(token: String, startDate: String, endDate: String): EventResponse? {
-        val httpEntity = constructHeader(token);
+        val httpEntity = constructHeader(token, null);
         val url = GOOGLE_CALENDAR_EVENTS + "?singleEvents=true&timeMin=" +
                 startDate + "&timeMax=" + endDate
         val events =
