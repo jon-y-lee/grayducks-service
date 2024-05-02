@@ -51,6 +51,4 @@ class ProfileController(
 
         return ResponseEntity.ok(userSettingsService.deleteSettingsProfile(userProfile, id))
     }
-
-
 }

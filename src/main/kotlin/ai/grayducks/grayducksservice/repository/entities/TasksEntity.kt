@@ -14,12 +14,16 @@ class TaskListEntity (
     @Column(nullable = false)
     var userId: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     var taskListId: String,
-) {
-    constructor() : this(null, userId = "", taskListId = "") {}
+
+    @Column(nullable = true, unique = false)
+    var assignedProfileId: String?,
+
+    ) {
+    constructor() : this(null, userId = "", taskListId = "", assignedProfileId = "") {}
 }
 
 fun TaskListEntity.mapToTaskList(): TaskList {
-    return TaskList(taskListId, "")
+    return TaskList(taskListId, title = "", assignedProfileId)
 }

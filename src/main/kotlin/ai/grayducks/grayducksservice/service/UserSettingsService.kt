@@ -26,7 +26,6 @@ class UserSettingsService(
 
         val profiles =
             userSetting.profiles.map { element -> element }.filter { element -> element.id.toString() != profile.id }.toMutableList()
-
         profiles.add(profile.mapToProfileEntity());
         userSetting.profiles = profiles
         return userSettingsRepository.save(userSetting).mapToUserSettings();

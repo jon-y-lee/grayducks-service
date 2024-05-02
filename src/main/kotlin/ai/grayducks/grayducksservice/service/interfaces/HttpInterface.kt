@@ -1,13 +1,27 @@
 package ai.grayducks.grayducksservice.service.interfaces
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.util.MultiValueMap
 
 interface HttpInterface {
-    fun constructHeader(token: String, body: MultiValueMap<String, String>?): HttpEntity<*>? {
+
+    val objectMapper: ObjectMapper
+        get() = ObjectMapper()
+
+    fun constructHeader(token: String, body: Any?): HttpEntity<*>? {
         val headers = HttpHeaders();
         headers.setBearerAuth(token.removePrefix("Bearer "))
-        return HttpEntity(body, headers);
+
+        var bodyString: String? = null
+
+        if (body != null) {
+          bodyString = objectMapper.writeValueAsString(body)
+        }
+
+        println("BodyString:" + bodyString);
+
+        return HttpEntity(bodyString, headers);
     }
 }
