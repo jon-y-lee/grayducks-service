@@ -45,15 +45,12 @@ class TokenController(
     @PostMapping("/token")
     fun token(@RequestBody request: TokenAuthorizationCodeRequest,
     @Value("\${app.grayducks.redirectUrl:null}") redirectUrl: String): ResponseEntity<String> {
-        System.out.println("token requestion sss" + request)
         val tokenCodeRequest = TokenAuthorizationCodeRequest(
             "authorization_code",
             request.code,
-            "877315751810-m2qboe99fehv6roceg5f42tcatngqqc1.apps.googleusercontent.com",
-            "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",
+            "id",
+            "secret",
             redirectUrl
-//            "https://www.grayducks.app"
-//        "http://localhost:3000"
         )
 
         val httpEntity = constructHeader(tokenCodeRequest);
