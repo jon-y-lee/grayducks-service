@@ -25,6 +25,7 @@ class AppConfig {
             HttpMethod.GET.name(),
             HttpMethod.HEAD.name(),
             HttpMethod.POST.name(),
+            HttpMethod.OPTIONS.name(),
             HttpMethod.PUT.name(),
             HttpMethod.DELETE.name()
         )

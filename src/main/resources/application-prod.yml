@@ -1,0 +1,38 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 877315751810-m2qboe99fehv6roceg5f42tcatngqqc1.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+              - openid
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+  datasource:
+    url: jdbc:postgresql://localhost/dev
+#    username: root
+    username: svcadmin
+    password: jlee365
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+hibernate:
+  show_sql: true
+  format_sql: true
+logging:
+  level:
+   org:
+    hibernate:
+     SQL: DEBUG
+     type: TRACE
+
+server:
+  port: 8081
+

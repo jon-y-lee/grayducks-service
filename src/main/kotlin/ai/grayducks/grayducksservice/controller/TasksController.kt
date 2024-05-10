@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
 @Controller
-@CrossOrigin(origins = arrayOf("http://localhost:3000"))
+@CrossOrigin(origins = arrayOf("http://localhost:3000", "https://www.launchprocedures.com", "https://www.grayducks.app"))
 class TasksController(@Autowired val tasksService: TasksService, @Autowired val calendarService: CalendarService) {
 
     @GetMapping("/taskLists")
@@ -60,6 +60,41 @@ class TasksController(@Autowired val tasksService: TasksService, @Autowired val 
 
         return ResponseEntity.ok(tasksService.updateTask(token, userProfile, taskListId, taskId, task));
     }
+
+    @PutMapping("/taskLists/{taskListId}/tasks/{taskId}/checked")
+    fun updateCheckedStatus(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String, @PathVariable taskListId: String,
+        @PathVariable taskId: String,
+    ): Any {
+        val userProfile = calendarService.getUserProfile(token);
+
+        var task: Task? = tasksService.getTask(token, userProfile, taskListId, taskId);
+        println("Task: " + task.toString())
+        if (task == null) {
+            return ResponseEntity.notFound();
+        }
+
+        if (task.status == "needsAction") {
+            task.status = "completed"
+        } else {
+            task.status = "needsAction"
+        }
+
+        println("updated Task: " + task.toString())
+
+        return ResponseEntity.ok(tasksService.updateTask(token, userProfile, taskListId, taskId, task));
+    }
+
+    @DeleteMapping("/taskLists/{taskListId}/tasks/{taskId}")
+    fun deleteTask(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) token: String, @PathVariable taskListId: String,
+        @PathVariable taskId: String
+    ): ResponseEntity<Any> {
+        val userProfile = calendarService.getUserProfile(token);
+
+        return ResponseEntity.ok(tasksService.deleteTask(token, userProfile, taskListId, taskId));
+    }
+
 
     @PostMapping("/taskLists/{taskListId}/tasks")
     fun createTask(

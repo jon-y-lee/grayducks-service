@@ -12,7 +12,7 @@ data class Task(
     val id: String?,
     val title: String?,
     val notes: String?,
-    val status: String?,
+    var status: String?,
     val completed: String?,
     val deleted: String?,
     val hidden: Boolean?,

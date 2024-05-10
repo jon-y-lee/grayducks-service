@@ -2,6 +2,7 @@ package ai.grayducks.grayducksservice.service
 
 import ai.grayducks.grayducksservice.config.Constants.Companion.GOOGLE_CALENDAR_EVENTS
 import ai.grayducks.grayducksservice.config.Constants.Companion.GOOGLE_USERINFO_URI
+import ai.grayducks.grayducksservice.domain.Event
 import ai.grayducks.grayducksservice.domain.EventResponse
 import ai.grayducks.grayducksservice.domain.UserInfo
 import ai.grayducks.grayducksservice.repository.UserSettingsRepository
@@ -55,5 +56,24 @@ class CalendarService(
             userSettingsEntity.externalSystemName = "Google"
             userRepository.save(userSettingsEntity)
         }
+    }
+
+    fun createEvent(token: String, event: Event): Event? {
+        val httpEntity = constructHeader(token, event);
+        val url = GOOGLE_CALENDAR_EVENTS
+        val events =
+            restTemplate.exchange(url, HttpMethod.POST, httpEntity, Event::class.java)
+
+        return events.body
+    }
+
+    fun updateEvent(token: String, id: String, event: Event): Event? {
+        val httpEntity = constructHeader(token, event);
+        val url = GOOGLE_CALENDAR_EVENTS + "/" + id
+        val events =
+            restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Event::class.java)
+
+        return events.body
+
     }
 }

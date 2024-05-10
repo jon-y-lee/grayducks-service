@@ -10,5 +10,7 @@ class Constants {
 
         val GOOGLE_CALENDAR_EVENTS = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
 
+        val TOKEN_URI = "https://oauth2.googleapis.com/token"
+
     }
 }

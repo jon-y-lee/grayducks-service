@@ -7,13 +7,14 @@ data class EventResponse(
 }
 
 data class Event(
-    val status: String?,
-    val start: EventDateTime?,
+    val id: String,
+    val status: String,
+    val start: EventDateTime,
     val end: EventDateTime?,
-    val summary: String?,
+    val summary: String,
     val recurrence: String?,
     val description: String?,
-    val colorId: Int) {
+    val colorId: Int?) {
 }
 
 data class EventDateTime (

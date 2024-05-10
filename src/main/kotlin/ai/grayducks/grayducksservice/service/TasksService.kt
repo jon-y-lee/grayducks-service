@@ -106,6 +106,21 @@ class TasksService(
         return events.body
     }
 
+    fun getTask(token: String, userProfile: UserInfo?, taskListId: String, taskId: String): Task? {
+        val httpEntity = constructHeader(token, null);
+
+        val events =
+            restTemplate.exchange(
+                GOOGLE_TASKS_URI + "/" + taskListId + "/tasks/" + taskId,
+                HttpMethod.GET,
+                httpEntity,
+                Task::class.java
+            )
+        println("GET TASSK : " + events.body.toString())
+        events.body
+        return events.body
+    }
+
     fun updateTask(token: String, userProfile: UserInfo?, taskListId: String, taskId: String, task: Task): Any? {
         val httpEntity = constructHeader(token, task);
 
@@ -155,9 +170,21 @@ class TasksService(
 
         val tsk = taskRepository.findByTaskListId(id)
         val deletedTaskList: Unit = taskRepository.delete(tsk)
-//        val d: TaskListEntity = TaskListEntity();
-//        d.mapToTaskList();
         return deletedTaskList;
+    }
+
+    fun deleteTask(token: String, userProfile: UserInfo?, taskListId: String, taskId: String): Any? {
+        val httpEntity = constructHeader(token, null);
+
+        val events =
+            restTemplate.exchange(
+                GOOGLE_TASKS_URI + "/" + taskListId + "/tasks/" + taskId,
+                HttpMethod.DELETE,
+                httpEntity,
+                TaskResponse::class.java
+            )
+        events.body
+        return events.body
     }
 
 }
