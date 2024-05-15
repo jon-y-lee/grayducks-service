@@ -5,7 +5,9 @@ import ai.grayducks.grayducksservice.config.Constants.Companion.GOOGLE_USERINFO_
 import ai.grayducks.grayducksservice.domain.Event
 import ai.grayducks.grayducksservice.domain.EventResponse
 import ai.grayducks.grayducksservice.domain.UserInfo
+import ai.grayducks.grayducksservice.repository.EventRepository
 import ai.grayducks.grayducksservice.repository.UserSettingsRepository
+import ai.grayducks.grayducksservice.repository.entities.EventEntity
 import ai.grayducks.grayducksservice.repository.entities.UserSettingsEntity
 import ai.grayducks.grayducksservice.service.interfaces.HttpInterface
 import mu.KotlinLogging
@@ -14,10 +16,13 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
+import java.util.Collections
+import java.util.stream.Collectors
 
 @Service
 class CalendarService(
     @Autowired val userRepository: UserSettingsRepository,
+    @Autowired val eventRepository: EventRepository,
     @Autowired val restTemplate: RestTemplate
 ) : HttpInterface {
 
@@ -42,6 +47,17 @@ class CalendarService(
         val events =
             restTemplate.exchange(url, HttpMethod.GET, httpEntity, EventResponse::class.java)
 
+        for (item in events.body?.items!!) {
+            val eventEntity = eventRepository.findByExternalId(item?.id!!);
+
+            if ( eventEntity != null) {
+                item.assigneeId = eventEntity.assignedProfileId
+            }
+        }
+//        events.body?.items?.map { item -> {
+//            item.assigneeId = "asdf"
+//        } }.toCollection(Collectors.toList<EventResponse>())
+
         return events.body
     }
 
@@ -64,6 +80,16 @@ class CalendarService(
         val events =
             restTemplate.exchange(url, HttpMethod.POST, httpEntity, Event::class.java)
 
+        if (event.assigneeId != null) {
+            // save event
+            val eventEntity = EventEntity()
+            eventEntity.externalId = events?.body?.id.toString();
+            eventEntity.assignedProfileId = event.assigneeId;
+            eventRepository.save(eventEntity);
+        }
+
+        events.body?.assigneeId = event.assigneeId
+
         return events.body
     }
 
@@ -72,6 +98,17 @@ class CalendarService(
         val url = GOOGLE_CALENDAR_EVENTS + "/" + id
         val events =
             restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Event::class.java)
+
+        if (event.assigneeId != null) {
+            // save event
+            var eventEntity: EventEntity? = eventRepository.findByExternalId(events?.body?.id.toString())
+            if (eventEntity != null) {
+                eventEntity?.assignedProfileId = event.assigneeId;
+                eventRepository.save(eventEntity);
+            }
+        }
+
+        events.body?.assigneeId = event.assigneeId
 
         return events.body
 

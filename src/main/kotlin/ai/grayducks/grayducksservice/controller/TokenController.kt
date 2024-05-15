@@ -31,7 +31,6 @@ data class RefreshTokenAuthorizationCodeRequest(
     val redirect_uri: String?
 ){}
 
-
 @Controller
 @CrossOrigin(origins = arrayOf("http://localhost:3000", "https://www.launchprocedures.com", "https://www.grayducks.app"))
 class TokenController(
@@ -48,8 +47,8 @@ class TokenController(
         val tokenCodeRequest = TokenAuthorizationCodeRequest(
             "authorization_code",
             request.code,
-            "id",
-            "secret",
+            "877315751810-m2qboe99fehv6roceg5f42tcatngqqc1.apps.googleusercontent.com",
+            "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",
             redirectUrl
         )
 
@@ -58,22 +57,26 @@ class TokenController(
         val events =
             restTemplate.exchange(url, HttpMethod.POST, httpEntity, String::class.java)
 
-//        return events.body
-
         return ResponseEntity.ok(events.body);
-//        return ResponseEntity.ok("")
     }
 
     @PostMapping("/token/refresh")
-    fun refresh(@RequestHeader(HttpHeaders.AUTHORIZATION) refreshToken: String): ResponseEntity<String> {
+    fun refresh(@RequestHeader(HttpHeaders.AUTHORIZATION) refreshToken: String,
+                @Value("\${app.grayducks.redirectUrl:null}") redirectUrl: String,
+    @RequestBody request: RefreshTokenAuthorizationCodeRequest): ResponseEntity<String> {
+
+        println("Token code To be refresh: " + request)
+        println("Token request request request: " + request.refresh_token)
 
         val refreshTokenCodeRequest = RefreshTokenAuthorizationCodeRequest(
             "refresh_token",
-            refreshToken,
+            request.refresh_token,
             "877315751810-m2qboe99fehv6roceg5f42tcatngqqc1.apps.googleusercontent.com",
             "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",
-            "http://localhost:3000"
+            redirectUrl
         )
+
+        println("Refresh Code Object:" + refreshToken)
 
         val httpEntity = constructHeader(refreshTokenCodeRequest);
         val url = Constants.TOKEN_URI

@@ -31,7 +31,7 @@ class EventsController(@Autowired val calendarService: CalendarService) {
 
     @PutMapping("/events/{id}")
     fun updateEvent(@RequestHeader(HttpHeaders.AUTHORIZATION) token: String,
-                    @RequestParam("id") id: String,
+                    @PathVariable("id") id: String,
                     @RequestBody event: Event
     ): ResponseEntity<Event> {
 
