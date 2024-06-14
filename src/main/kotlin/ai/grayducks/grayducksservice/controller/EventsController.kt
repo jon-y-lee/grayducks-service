@@ -35,7 +35,7 @@ class EventsController(@Autowired val calendarService: CalendarService) {
                     @RequestBody event: Event
     ): ResponseEntity<Event> {
 
-        println("Event creation:" + event)
+        println("Event update:" + event)
         return ResponseEntity.ok(calendarService.updateEvent(token, id, event));
     }
 

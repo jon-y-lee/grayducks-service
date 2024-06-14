@@ -47,6 +47,7 @@ class CalendarService(
         val events =
             restTemplate.exchange(url, HttpMethod.GET, httpEntity, EventResponse::class.java)
 
+        println("Events:" + events.body.toString())
         for (item in events.body?.items!!) {
             val eventEntity = eventRepository.findByExternalId(item?.id!!);
 
@@ -54,9 +55,6 @@ class CalendarService(
                 item.assigneeId = eventEntity.assignedProfileId
             }
         }
-//        events.body?.items?.map { item -> {
-//            item.assigneeId = "asdf"
-//        } }.toCollection(Collectors.toList<EventResponse>())
 
         return events.body
     }
@@ -99,12 +97,22 @@ class CalendarService(
         val events =
             restTemplate.exchange(url, HttpMethod.PUT, httpEntity, Event::class.java)
 
+        println("Events Updated:" + events.toString())
+        println("  assignee:" + event.assigneeId)
+
         if (event.assigneeId != null) {
             // save event
             var eventEntity: EventEntity? = eventRepository.findByExternalId(events?.body?.id.toString())
             if (eventEntity != null) {
                 eventEntity?.assignedProfileId = event.assigneeId;
+                println("Event saving assigned profid")
                 eventRepository.save(eventEntity);
+            } else {
+                val newEventEntity: EventEntity = EventEntity();
+                newEventEntity.assignedProfileId = event.assigneeId;
+                newEventEntity.externalId = id
+                println("Event not found - creating one")
+                eventRepository.save(newEventEntity);
             }
         }
 

@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletResponse
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.client.HttpStatusCodeException
+import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.HandlerInterceptor
 
@@ -32,8 +34,20 @@ class TokenInterceptor(val restTemplate: RestTemplate) : HandlerInterceptor {
 
         val urlPath: String =
             TOKENINFO_URL + token.removePrefix("Bearer ");
-        val verifierResponse: ResponseEntity<String> = restTemplate.getForEntity(urlPath, String::class.java)
-        response.status = verifierResponse.statusCode.value()
+
+        try {
+            val verifierResponse: ResponseEntity<String> = restTemplate.getForEntity(urlPath, String::class.java)
+            response.status = verifierResponse.statusCode.value()
+        } catch (exception: HttpStatusCodeException) {
+            log.error("Exception:" + exception.localizedMessage)
+            if (exception.localizedMessage.contains("invalid_token", true)) {
+                response.status = 401
+            } else {
+                response.status = exception.statusCode.value()
+            }
+        }
+
+//        response.status = verifierResponse.statusCode.value()
 
         log.info("token status:{}", response.status);
         return response.status == HttpStatus.OK.value()
